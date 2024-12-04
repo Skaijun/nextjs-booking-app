@@ -10,7 +10,7 @@ async function createSession(prevState, formData) {
   if (!email || !password) {
     // You can return any result of the action.
     // Here, we return only the error.
-    return { error: true, message: "Please fill out all form fields" };
+    return { error: true, message: "Please fill in all form fields" };
   }
 
   const { account } = await createAdminClient();
