@@ -7,6 +7,23 @@ import { useEffect, useActionState } from "react";
 import Heading from "@/components/Heading";
 import createRoom from "@/app/actions/createRoom";
 
+const resetImagePicker = (event) => {
+  event.target.value = "";
+};
+
+const isValidImageFormat = (fileName) => {
+  const fileFormat = fileName.split(".")[1];
+  if (
+    fileFormat.toLowerCase() !== "png" &&
+    fileFormat.toLowerCase() !== "jpg" &&
+    fileFormat.toLowerCase() !== "jpeg"
+  ) {
+    return false;
+  }
+
+  return true;
+};
+
 const AddRoomPage = () => {
   const router = useRouter();
   const [state, formAction, isPending] = useActionState(createRoom, {});
@@ -21,6 +38,26 @@ const AddRoomPage = () => {
       router.push("/");
     }
   }, [state]);
+
+  const handleImageSelection = (event) => {
+    const file = event.target.files[0];
+
+    if (!file) {
+      toast.warn("No file selected!");
+      return;
+    }
+
+    if (file.size > 2000000) {
+      toast.warn("Please select image < 2 Mb");
+      resetImagePicker();
+      return;
+    }
+
+    if (!isValidImageFormat) {
+      toast.warn("Please select appropriate image formats: PNG or JPG or JPEG");
+      resetImagePicker();
+    }
+  };
 
   return (
     <>
@@ -178,7 +215,9 @@ const AddRoomPage = () => {
             </label>
 
             <input
+              onChange={handleImageSelection}
               type="file"
+              accept="image/png, image/jpeg"
               id="image"
               name="image"
               className="border rounded w-full py-2 px-3"

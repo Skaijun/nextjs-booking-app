@@ -8,7 +8,7 @@ import checkAuth from "./checkAuth";
 
 async function createRoom(prevState, formData) {
   // get db instance
-  const { databases } = await createAdminClient();
+  const { databases, storage } = await createAdminClient();
 
   try {
     const { user } = await checkAuth();
@@ -19,6 +19,23 @@ async function createRoom(prevState, formData) {
         message: "You must be logged in to create a Room!",
       };
     }
+
+    // uploading image
+    let imageID;
+    const image = formData.get("image");
+    if (image && image.size > 0 && image.name !== "undefined")
+      try {
+        const response = await storage.createFile("rooms", ID.unique(), image);
+        imageID = response.$id;
+      } catch (error) {
+        const errorMsg =
+          error.response?.message ||
+          "An unexpected error uploading image has occured!";
+        return {
+          error: true,
+          message: errorMsg,
+        };
+      }
 
     const newRoom = await databases.createDocument(
       process.env.NEXT_PUBLIC_APPWRITE_DATABASE,
@@ -35,6 +52,7 @@ async function createRoom(prevState, formData) {
         availability: formData.get("availability"),
         price_per_hour: formData.get("price_per_hour"),
         amenities: formData.get("amenities"),
+        image: imageID,
       }
     );
 

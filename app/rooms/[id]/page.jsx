@@ -1,10 +1,11 @@
 import Link from "next/link";
 import Image from "next/image";
+import { FaChevronLeft } from "react-icons/fa";
 
 import Heading from "@/components/Heading";
 import BookingForm from "@/components/BookingForm";
-import { FaChevronLeft } from "react-icons/fa";
 import getSingleRoom from "@/app/actions/getSingleRoom";
+import { getImageUrl } from "@/util/imageHelpers";
 
 const RoomPage = async ({ params }) => {
   const { id } = await params;
@@ -13,6 +14,8 @@ const RoomPage = async ({ params }) => {
   if (!room) {
     return <Heading title="Room not Found!" />;
   }
+
+  const imageURL = getImageUrl(room.image);
 
   return (
     <>
@@ -27,7 +30,7 @@ const RoomPage = async ({ params }) => {
 
         <div className="flex flex-col sm:flex-row sm:space-x-6">
           <Image
-            src={`/images/rooms/${room.image}`}
+            src={imageURL}
             width={400}
             height={200}
             alt="Grand Conference Hall"
@@ -65,7 +68,7 @@ const RoomPage = async ({ params }) => {
           </div>
         </div>
 
-        <BookingForm />
+        <BookingForm room={room} />
       </div>
     </>
   );

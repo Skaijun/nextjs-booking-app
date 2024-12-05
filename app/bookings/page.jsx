@@ -1,5 +1,14 @@
+import Heading from "@/components/Heading";
+// import BookedRoomCard from "@/components/BookedRoomCard";
+// import getMyBookings from "../actions/getMyBookings";
+
 const BookingsPage = () => {
-  return <>Bookings</>;
+  return (
+    <>
+      <Heading title="My Bookings" />
+      <p>TODO</p>
+    </>
+  );
 };
 
 export default BookingsPage;
