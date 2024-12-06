@@ -24,28 +24,36 @@ async function deleteRoom(roomID) {
     const user = await account.get();
     const userId = user.$id;
 
-    // Fetch current user rooms
-    // const { documents: rooms } = await databases.listDocuments(
-    //   process.env.NEXT_PUBLIC_APPWRITE_DATABASE,
-    //   process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_ROOMS,
-    //   [Query.equal("user_id", userId)]
-    // );
-
-    // Delete selected Room
-    const response = await databases.deleteDocument(
+    // Fetch users rooms
+    const { documents: rooms } = await databases.listDocuments(
       process.env.NEXT_PUBLIC_APPWRITE_DATABASE,
       process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_ROOMS,
-      roomID
+      [Query.equal("user_id", userId)]
     );
 
-    // revalidate the cache for this path to observe changes immediately
-    revalidatePath("/rooms/my", "layout");
-    revalidatePath("/", "layout");
+    // Find room to delete
+    const roomToDelete = rooms.find((room) => room.$id === roomID);
+    if (roomToDelete) {
+      await databases.deleteDocument(
+        process.env.NEXT_PUBLIC_APPWRITE_DATABASE,
+        process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_ROOMS,
+        roomToDelete.$id
+      );
 
-    return {
-      success: true,
-      message: "Successfully deleted room!",
-    };
+      // Revalidate my rooms and all rooms
+      revalidatePath("/rooms/my", "layout");
+      revalidatePath("/", "layout");
+
+      return {
+        success: true,
+        message: "Successfully deleted room!",
+      };
+    } else {
+      return {
+        error: true,
+        message: "Room not found",
+      };
+    }
   } catch (error) {
     const errorMsg = error.response?.message || "Failed to delete room";
     return {
