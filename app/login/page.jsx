@@ -2,15 +2,17 @@
 
 import Link from "next/link";
 import { toast } from "react-toastify";
-import { useActionState, useEffect } from "react";
-
+// import { useActionState, useEffect } from "react";
+import { useEffect } from "react";
+import { useFormState } from "react-dom";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/authContext";
 import createSession from "@/app/actions/createSession";
 
 const LoginPage = () => {
   const router = useRouter();
-  const [state, formAction, isPending] = useActionState(createSession, {});
+  // const [state, formAction, isPending] = useActionState(createSession, {});
+  const [state, formAction] = useFormState(createSession, {});
   const { setIsAuthenticated } = useAuth();
 
   useEffect(() => {

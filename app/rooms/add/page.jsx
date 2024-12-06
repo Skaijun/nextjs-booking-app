@@ -2,7 +2,9 @@
 
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
-import { useEffect, useActionState } from "react";
+// import { useEffect, useActionState } from "react";
+import { useEffect } from "react";
+import { useFormState } from "react-dom";
 
 import Heading from "@/components/Heading";
 import createRoom from "@/app/actions/createRoom";
@@ -26,7 +28,8 @@ const isValidImageFormat = (fileName) => {
 
 const AddRoomPage = () => {
   const router = useRouter();
-  const [state, formAction, isPending] = useActionState(createRoom, {});
+  // const [state, formAction, isPending] = useActionState(createRoom, {});
+  const [state, formAction] = useFormState(createRoom, {});
 
   useEffect(() => {
     if (state.error) {

@@ -2,11 +2,14 @@
 
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
-import { useEffect, useActionState } from "react";
+// import { useEffect, useActionState } from "react";
+import { useEffect } from "react";
 import bookRoom from "@/app/actions/bookRoom";
+import { useFormState } from "react-dom";
 
 const BookingForm = ({ room }) => {
-  const [state, formAction, isPending] = useActionState(bookRoom, {});
+  // const [state, formAction, isPending] = useActionState(bookRoom, {});
+  const [state, formAction] = useFormState(bookRoom, {});
   const router = useRouter();
 
   useEffect(() => {

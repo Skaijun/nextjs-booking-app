@@ -3,12 +3,15 @@
 import Link from "next/link";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
-import { useActionState, useEffect } from "react";
+// import { useActionState, useEffect } from "react";
+import { useEffect } from "react";
+import { useFormState } from "react-dom";
 import createUser from "@/app/actions/createUser";
 
 const RegisterPage = () => {
   const router = useRouter();
-  const [state, formAction, isPending] = useActionState(createUser, {});
+  // const [state, formAction, isPending] = useActionState(createUser, {});
+  const [state, formAction] = useFormState(createUser, {});
 
   useEffect(() => {
     if (state.error) {
