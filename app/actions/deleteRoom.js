@@ -38,8 +38,6 @@ async function deleteRoom(roomID) {
       roomID
     );
 
-    console.log(response);
-
     // revalidate the cache for this path to observe changes immediately
     revalidatePath("/rooms/my", "layout");
     revalidatePath("/", "layout");
